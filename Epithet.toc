@@ -1,0 +1,35 @@
+## Interface: 120001
+## Title: Epithet
+## Notes: Browse all player titles, see how each was obtained, rarity tiers, and track your collection.
+## Author: JoeTomkinson
+## Version: 1.0.0
+## SavedVariables: EpithetDB
+## IconTexture: Interface\AddOns\Epithet\icons\logo\epithet-wax-seal-red-mark-64
+## OptionalDeps: Ace3, LibDataBroker-1.1, LibDBIcon-1.0
+
+# Libraries
+libs\LibStub\LibStub.lua
+libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+libs\AceAddon-3.0\AceAddon-3.0.lua
+libs\AceDB-3.0\AceDB-3.0.lua
+libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+
+# Locale
+Locales\enGB.lua
+
+# Bundled Data
+data\TitlesDB.lua
+
+# Core
+Core\Theme.lua
+Core\TitleData.lua
+Core\Filters.lua
+Core\Epithet.lua
+
+# UI
+UI\MainFrame.xml
+UI\MainFrame.lua
+UI\TitleList.lua
+UI\Sidebar.lua
+UI\Detail.lua

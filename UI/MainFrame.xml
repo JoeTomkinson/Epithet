@@ -1,0 +1,598 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
+    <!-- =================================================================== -->
+    <!-- Epithet Main Window                                                  -->
+    <!-- Custom dark parchment chrome — no Blizzard template inheritance.     -->
+    <!-- =================================================================== -->
+    <Frame name="EpithetMainFrame" parent="UIParent" inherits="BackdropTemplate"
+           hidden="true" enableMouse="true" movable="true" clampedToScreen="true"
+           frameStrata="HIGH" toplevel="true">
+        <Size x="1248" y="792"/>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+
+        <Layers>
+            <!-- Outer border: 2px gold-deep hairline -->
+            <Layer level="BORDER">
+                <Texture parentKey="BorderTop">
+                    <Size x="0" y="2"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="TOPRIGHT"/>
+                    </Anchors>
+                    <Color r="0.49" g="0.37" b="0.15" a="0.85"/>
+                </Texture>
+                <Texture parentKey="BorderBottom">
+                    <Size x="0" y="2"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                    <Color r="0.49" g="0.37" b="0.15" a="0.85"/>
+                </Texture>
+                <Texture parentKey="BorderLeft">
+                    <Size x="2" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="0" y="-2"/>
+                        <Anchor point="BOTTOMLEFT" x="0" y="2"/>
+                    </Anchors>
+                    <Color r="0.49" g="0.37" b="0.15" a="0.85"/>
+                </Texture>
+                <Texture parentKey="BorderRight">
+                    <Size x="2" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPRIGHT" x="0" y="-2"/>
+                        <Anchor point="BOTTOMRIGHT" x="0" y="2"/>
+                    </Anchors>
+                    <Color r="0.49" g="0.37" b="0.15" a="0.85"/>
+                </Texture>
+                <!-- Inner accent line (1px, faint gold) -->
+                <Texture parentKey="InnerTop">
+                    <Size x="0" y="1"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="2" y="-2"/>
+                        <Anchor point="TOPRIGHT" x="-2" y="-2"/>
+                    </Anchors>
+                    <Color r="0.72" g="0.60" b="0.36" a="0.18"/>
+                </Texture>
+                <Texture parentKey="InnerBottom">
+                    <Size x="0" y="1"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" x="2" y="2"/>
+                        <Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
+                    </Anchors>
+                    <Color r="0.72" g="0.60" b="0.36" a="0.18"/>
+                </Texture>
+                <Texture parentKey="InnerLeft">
+                    <Size x="1" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="2" y="-3"/>
+                        <Anchor point="BOTTOMLEFT" x="2" y="3"/>
+                    </Anchors>
+                    <Color r="0.72" g="0.60" b="0.36" a="0.18"/>
+                </Texture>
+                <Texture parentKey="InnerRight">
+                    <Size x="1" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPRIGHT" x="-2" y="-3"/>
+                        <Anchor point="BOTTOMRIGHT" x="-2" y="3"/>
+                    </Anchors>
+                    <Color r="0.72" g="0.60" b="0.36" a="0.18"/>
+                </Texture>
+            </Layer>
+        </Layers>
+
+        <Frames>
+            <!-- =========================================================== -->
+            <!-- Title Bar (custom, replaces portrait chrome)                  -->
+            <!-- =========================================================== -->
+            <Frame name="$parentTitleBar" parentKey="TitleBar" enableMouse="true">
+                <Size x="0" y="36"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="3" y="-3"/>
+                    <Anchor point="TOPRIGHT" x="-3" y="-3"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture parentKey="BG" setAllPoints="true">
+                            <Color r="0.08" g="0.06" b="0.03" a="0.92"/>
+                        </Texture>
+                    </Layer>
+                    <Layer level="ARTWORK">
+                        <!-- Logo icon (wax seal) -->
+                        <Texture parentKey="Logo"
+                                 file="Interface\AddOns\Epithet\icons\logo\epithet-wax-seal-red-mark-32">
+                            <Size x="24" y="24"/>
+                            <Anchors>
+                                <Anchor point="LEFT" x="10" y="0"/>
+                            </Anchors>
+                        </Texture>
+                        <FontString name="$parentTitle" parentKey="Title"
+                                    inherits="GameFontNormal" justifyH="CENTER">
+                            <Anchors>
+                                <Anchor point="CENTER" x="0" y="0"/>
+                            </Anchors>
+                            <Color r="0.91" g="0.78" b="0.45"/>
+                        </FontString>
+                        <!-- Separator below title bar -->
+                        <Texture parentKey="Sep">
+                            <Size x="0" y="1"/>
+                            <Anchors>
+                                <Anchor point="BOTTOMLEFT" x="0" y="0"/>
+                                <Anchor point="BOTTOMRIGHT" x="0" y="0"/>
+                            </Anchors>
+                            <Color r="0.72" g="0.60" b="0.36" a="0.30"/>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <!-- Close button (custom tinted icon) -->
+                    <Button name="$parentCloseButton" parentKey="CloseButton">
+                        <Size x="20" y="20"/>
+                        <Anchors>
+                            <Anchor point="RIGHT" x="-8" y="0"/>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="ARTWORK">
+                                <Texture parentKey="Icon"
+                                         file="Interface\AddOns\Epithet\icons\ui\epithet-ui-close-16">
+                                    <Size x="14" y="14"/>
+                                    <Anchors>
+                                        <Anchor point="CENTER"/>
+                                    </Anchors>
+                                    <Color r="1.0" g="1.0" b="1.0" a="0.8"/>
+                                </Texture>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                EpithetMainFrame:Hide()
+                            </OnClick>
+                            <OnEnter>
+                                self.Icon:SetVertexColor(1.0, 1.0, 1.0, 1.0)
+                            </OnEnter>
+                            <OnLeave>
+                                self.Icon:SetVertexColor(1.0, 1.0, 1.0, 0.8)
+                            </OnLeave>
+                        </Scripts>
+                    </Button>
+                </Frames>
+                <Scripts>
+                    <OnLoad>
+                        self:RegisterForDrag("LeftButton")
+                    </OnLoad>
+                    <OnDragStart>
+                        self:GetParent():StartMoving()
+                    </OnDragStart>
+                    <OnDragStop>
+                        local f = self:GetParent()
+                        f:StopMovingOrSizing()
+                        if EpithetMainFrame.SavePosition then
+                            EpithetMainFrame:SavePosition()
+                        end
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+
+            <!-- =========================================================== -->
+            <!-- Header Band                                                  -->
+            <!-- =========================================================== -->
+            <Frame name="$parentHeader" parentKey="Header">
+                <Size x="0" y="78"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="16" y="-44"/>
+                    <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" x="-16" y="-44"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <!-- Portrait border ring (behind portrait) -->
+                        <Texture name="$parentPortraitRing" parentKey="PortraitRing">
+                            <Size x="48" y="48"/>
+                            <Anchors>
+                                <Anchor point="LEFT" x="7" y="0"/>
+                            </Anchors>
+                            <Color r="0.49" g="0.37" b="0.15" a="0.8"/>
+                        </Texture>
+                    </Layer>
+                    <Layer level="ARTWORK">
+                        <!-- Crown icon positioned above the portrait -->
+                        <Texture name="$parentCrown" parentKey="Crown"
+                                 file="Interface\AddOns\Epithet\icons\logo\epithet-crown-mark-32">
+                            <Size x="28" y="28"/>
+                            <Anchors>
+                                <Anchor point="BOTTOM" relativeTo="$parentPortraitRing"
+                                        relativePoint="TOP" x="0" y="-6"/>
+                            </Anchors>
+                        </Texture>
+                        <!-- Player portrait -->
+                        <Texture name="$parentPortrait" parentKey="Portrait">
+                            <Size x="46" y="46"/>
+                            <Anchors>
+                                <Anchor point="CENTER" relativeTo="$parentPortraitRing"
+                                        relativePoint="CENTER"/>
+                            </Anchors>
+                        </Texture>
+                        <!-- Player Name -->
+                        <FontString name="$parentPlayerName" parentKey="PlayerName"
+                                    inherits="GameFontNormalLarge" justifyH="LEFT">
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativeTo="$parentPortrait"
+                                        relativePoint="TOPRIGHT" x="12" y="-2"/>
+                            </Anchors>
+                            <Color r="0.96" g="0.89" b="0.65"/>
+                        </FontString>
+                        <!-- Player Realm -->
+                        <FontString name="$parentPlayerRealm" parentKey="PlayerRealm"
+                                    inherits="GameFontHighlightSmall" justifyH="LEFT">
+                            <Anchors>
+                                <Anchor point="TOPLEFT" relativeTo="$parentPlayerName"
+                                        relativePoint="BOTTOMLEFT" x="0" y="-1"/>
+                            </Anchors>
+                            <Color r="0.61" g="0.55" b="0.42"/>
+                        </FontString>
+                        <!-- Titles Earned Label -->
+                        <FontString name="$parentEarnedLabel" parentKey="EarnedLabel"
+                                    inherits="GameFontNormalSmall" justifyH="RIGHT"
+                                    text="TITLES EARNED">
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" x="-8" y="-8"/>
+                            </Anchors>
+                            <Color r="0.73" g="0.57" b="0.25"/>
+                        </FontString>
+                        <!-- Earned Count -->
+                        <FontString name="$parentEarnedCount" parentKey="EarnedCount"
+                                    inherits="GameFontNormalLarge" justifyH="RIGHT">
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" relativeTo="$parentEarnedLabel"
+                                        relativePoint="BOTTOMRIGHT" x="0" y="-2"/>
+                            </Anchors>
+                            <Color r="0.96" g="0.89" b="0.65"/>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <!-- Progress Bar -->
+                    <StatusBar name="$parentProgressBar" parentKey="ProgressBar"
+                               minValue="0" maxValue="100">
+                        <Size x="0" y="12"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentPlayerRealm"
+                                    relativePoint="BOTTOMLEFT" x="0" y="-8"/>
+                            <Anchor point="RIGHT" x="-8" y="0"/>
+                        </Anchors>
+                        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+                        <BarColor r="0.91" g="0.78" b="0.45"/>
+                        <Layers>
+                            <Layer level="BACKGROUND">
+                                <Texture parentKey="BG">
+                                    <Color r="0.14" g="0.11" b="0.06" a="0.95"/>
+                                    <Anchors>
+                                        <Anchor point="TOPLEFT"/>
+                                        <Anchor point="BOTTOMRIGHT"/>
+                                    </Anchors>
+                                </Texture>
+                            </Layer>
+                            <Layer level="OVERLAY">
+                                <Texture parentKey="Border">
+                                    <Color r="0.55" g="0.45" b="0.25" a="0.45"/>
+                                    <Anchors>
+                                        <Anchor point="TOPLEFT" x="0" y="1"/>
+                                        <Anchor point="TOPRIGHT" x="0" y="1"/>
+                                    </Anchors>
+                                    <Size x="0" y="1"/>
+                                </Texture>
+                                <Texture parentKey="BorderBottom">
+                                    <Color r="0.55" g="0.45" b="0.25" a="0.45"/>
+                                    <Anchors>
+                                        <Anchor point="BOTTOMLEFT" x="0" y="-1"/>
+                                        <Anchor point="BOTTOMRIGHT" x="0" y="-1"/>
+                                    </Anchors>
+                                    <Size x="0" y="1"/>
+                                </Texture>
+                            </Layer>
+                        </Layers>
+                    </StatusBar>
+                </Frames>
+            </Frame>
+
+            <!-- =========================================================== -->
+            <!-- Filter Sidebar (left, 234px)                                 -->
+            <!-- =========================================================== -->
+            <Frame name="$parentSidebar" parentKey="Sidebar" inherits="InsetFrameTemplate3">
+                <Size x="234" y="0"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="10" y="-130"/>
+                    <Anchor point="BOTTOMLEFT" x="10" y="52"/>
+                </Anchors>
+            </Frame>
+
+            <!-- =========================================================== -->
+            <!-- Title List (centre, flex)                                     -->
+            <!-- =========================================================== -->
+            <Frame name="$parentListContainer" parentKey="ListContainer" inherits="InsetFrameTemplate3">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentSidebar"
+                            relativePoint="TOPRIGHT" x="4" y="0"/>
+                    <Anchor point="BOTTOMRIGHT" x="-384" y="52"/>
+                </Anchors>
+                <Frames>
+                    <!-- List Header -->
+                    <Frame name="$parentListHeader" parentKey="ListHeader">
+                        <Size x="0" y="38"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" x="8" y="-4"/>
+                            <Anchor point="TOPRIGHT" x="-8" y="-4"/>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="ARTWORK">
+                                <FontString name="$parentCount" parentKey="Count"
+                                            inherits="GameFontHighlightSmall" justifyH="LEFT">
+                                    <Anchors>
+                                        <Anchor point="LEFT" x="4" y="0"/>
+                                    </Anchors>
+                                </FontString>
+                                <FontString name="$parentSortLabel" parentKey="SortLabel"
+                                            inherits="GameFontHighlightSmall" justifyH="RIGHT">
+                                    <Anchors>
+                                        <Anchor point="RIGHT" x="-4" y="0"/>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Frames>
+                            <Button name="$parentSortButton" parentKey="SortButton">
+                                <Size x="130" y="24"/>
+                                <Anchors>
+                                    <Anchor point="RIGHT" x="-2" y="0"/>
+                                </Anchors>
+                                <NormalFont style="GameFontHighlightSmall"/>
+                                <Scripts>
+                                    <OnClick>
+                                        EpithetMainFrame:GetParent():GetParent().ToggleSort()
+                                    </OnClick>
+                                </Scripts>
+                            </Button>
+                        </Frames>
+                    </Frame>
+
+                    <!-- ScrollBox for title rows -->
+                    <Frame name="$parentScrollBox" parentKey="ScrollBox"
+                           inherits="WowScrollBoxList">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentListHeader"
+                                    relativePoint="BOTTOMLEFT" x="0" y="-2"/>
+                            <Anchor point="BOTTOMRIGHT" x="-22" y="4"/>
+                        </Anchors>
+                    </Frame>
+
+                    <!-- ScrollBar -->
+                    <EventFrame name="$parentScrollBar" parentKey="ScrollBar"
+                                inherits="MinimalScrollBar">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentScrollBox"
+                                    relativePoint="TOPRIGHT" x="4" y="0"/>
+                            <Anchor point="BOTTOMLEFT" relativeTo="$parentScrollBox"
+                                    relativePoint="BOTTOMRIGHT" x="4" y="0"/>
+                        </Anchors>
+                    </EventFrame>
+                </Frames>
+            </Frame>
+
+            <!-- =========================================================== -->
+            <!-- Detail Panel (right, 372px)                                  -->
+            <!-- =========================================================== -->
+            <Frame name="$parentDetail" parentKey="Detail" inherits="InsetFrameTemplate3">
+                <Size x="372" y="0"/>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="-10" y="-130"/>
+                    <Anchor point="BOTTOMRIGHT" x="-10" y="52"/>
+                </Anchors>
+            </Frame>
+
+            <!-- =========================================================== -->
+            <!-- Bottom Bar                                                   -->
+            <!-- =========================================================== -->
+            <Frame name="$parentBottomBar" parentKey="BottomBar">
+                <Size x="0" y="46"/>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" x="10" y="4"/>
+                    <Anchor point="BOTTOMRIGHT" x="-10" y="4"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <!-- Rarity label -->
+                        <FontString name="$parentRarityLabel" parentKey="RarityLabel"
+                                    inherits="GameFontNormalSmall" justifyH="LEFT"
+                                    text="RARITY">
+                            <Anchors>
+                                <Anchor point="LEFT" x="12" y="0"/>
+                            </Anchors>
+                            <Color r="0.91" g="0.78" b="0.45"/>
+                        </FontString>
+                        <!-- Version -->
+                        <FontString name="$parentVersion" parentKey="Version"
+                                    inherits="GameFontDisableSmall" justifyH="RIGHT">
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" x="-12" y="-6"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString name="$parentVersion2" parentKey="Version2"
+                                    inherits="GameFontDisableSmall" justifyH="RIGHT">
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" relativeTo="$parentVersion"
+                                        relativePoint="BOTTOMRIGHT" x="0" y="-2"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+        </Frames>
+    </Frame>
+
+    <!-- =================================================================== -->
+    <!-- Title Row Template                                                   -->
+    <!-- =================================================================== -->
+    <Button name="EpithetTitleRowTemplate" virtual="true">
+        <Size x="0" y="64"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <!-- Hover/selection highlight -->
+                <Texture parentKey="Highlight" setAllPoints="true" hidden="true">
+                    <Color r="0.91" g="0.78" b="0.45" a="0.06"/>
+                </Texture>
+                <!-- Selection: subtle fill + gold border edges -->
+                <Texture parentKey="Selected" setAllPoints="true" hidden="true">
+                    <Color r="0.91" g="0.78" b="0.45" a="0.06"/>
+                </Texture>
+                <Texture parentKey="SelBorderTop" hidden="true">
+                    <Size x="0" y="1"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="TOPRIGHT"/>
+                    </Anchors>
+                    <Color r="0.49" g="0.37" b="0.15" a="0.7"/>
+                </Texture>
+                <Texture parentKey="SelBorderBottom" hidden="true">
+                    <Size x="0" y="1"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                    <Color r="0.49" g="0.37" b="0.15" a="0.7"/>
+                </Texture>
+                <Texture parentKey="SelBorderLeft" hidden="true">
+                    <Size x="1" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="BOTTOMLEFT"/>
+                    </Anchors>
+                    <Color r="0.49" g="0.37" b="0.15" a="0.7"/>
+                </Texture>
+                <Texture parentKey="SelBorderRight" hidden="true">
+                    <Size x="1" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPRIGHT"/>
+                        <Anchor point="BOTTOMRIGHT"/>
+                    </Anchors>
+                    <Color r="0.49" g="0.37" b="0.15" a="0.7"/>
+                </Texture>
+                <!-- Active title left accent bar -->
+                <Texture parentKey="ActiveBar" hidden="true">
+                    <Size x="3" y="0"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="BOTTOMLEFT"/>
+                    </Anchors>
+                    <Color r="0.91" g="0.78" b="0.45" a="1.0"/>
+                </Texture>
+            </Layer>
+
+            <Layer level="ARTWORK">
+                <!-- Rarity gem (full row height, left column) -->
+                <Texture parentKey="Pip">
+                    <Size x="48" y="48"/>
+                    <Anchors>
+                        <Anchor point="LEFT" x="8" y="0"/>
+                    </Anchors>
+                </Texture>
+
+                <!-- Right column: State mark (lock/tick icon) -->
+                <Texture parentKey="StateMark">
+                    <Size x="32" y="32"/>
+                    <Anchors>
+                        <Anchor point="RIGHT" x="-10" y="0"/>
+                    </Anchors>
+                </Texture>
+                <!-- Type tag pill (PREFIX/SUFFIX) -->
+                <FontString parentKey="TypeTag" inherits="GameFontDisableSmall"
+                            justifyH="CENTER">
+                    <Size x="50" y="16"/>
+                    <Anchors>
+                        <Anchor point="RIGHT" x="-52" y="0"/>
+                    </Anchors>
+                    <Color r="0.61" g="0.55" b="0.42"/>
+                </FontString>
+                <!-- ACTIVE chip -->
+                <FontString parentKey="ActiveChip" inherits="GameFontHighlightSmall"
+                            justifyH="CENTER" text="ACTIVE" hidden="true">
+                    <Size x="50" y="16"/>
+                    <Anchors>
+                        <Anchor point="RIGHT" x="-120" y="0"/>
+                    </Anchors>
+                    <Color r="0.05" g="0.04" b="0.02"/>
+                </FontString>
+
+                <!-- Title text (row 1) -->
+                <FontString parentKey="TitleText" inherits="GameFontNormalLarge"
+                            justifyH="LEFT" maxLines="1" wordWrap="false">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="64" y="-10"/>
+                        <Anchor point="TOPRIGHT" x="-180" y="-10"/>
+                    </Anchors>
+                </FontString>
+                <!-- Source text (row 2: "Kind: Source Name") -->
+                <FontString parentKey="SourceText" inherits="GameFontDisableSmall"
+                            justifyH="LEFT" maxLines="1" wordWrap="false">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="64" y="-34"/>
+                        <Anchor point="TOPRIGHT" x="-180" y="-34"/>
+                    </Anchors>
+                    <Color r="0.61" g="0.55" b="0.42"/>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnEnter>
+                self.Highlight:Show()
+                if self.OnRowEnter then self:OnRowEnter() end
+            </OnEnter>
+            <OnLeave>
+                self.Highlight:Hide()
+                if self.OnRowLeave then self:OnRowLeave() end
+            </OnLeave>
+            <OnClick>
+                if self.OnRowClick then self:OnRowClick() end
+            </OnClick>
+        </Scripts>
+    </Button>
+
+    <!-- =================================================================== -->
+    <!-- Group Header Template                                                -->
+    <!-- =================================================================== -->
+    <Frame name="EpithetGroupHeaderTemplate" virtual="true">
+        <Size x="0" y="28"/>
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="$parentLabel" parentKey="Label" inherits="GameFontNormalSmall"
+                            justifyH="LEFT">
+                    <Anchors>
+                        <Anchor point="LEFT" x="10" y="0"/>
+                    </Anchors>
+                    <Color r="0.49" g="0.37" b="0.15"/>
+                </FontString>
+                <FontString parentKey="Count" inherits="GameFontDisableSmall"
+                            justifyH="LEFT">
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentLabel"
+                                relativePoint="RIGHT" x="6" y="0"/>
+                    </Anchors>
+                    <Color r="0.61" g="0.55" b="0.42"/>
+                </FontString>
+            </Layer>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Line">
+                    <Size x="0" y="1"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMLEFT" x="8" y="0"/>
+                        <Anchor point="BOTTOMRIGHT" x="-8" y="0"/>
+                    </Anchors>
+                    <Color r="0.72" g="0.60" b="0.36" a="0.22"/>
+                </Texture>
+            </Layer>
+        </Layers>
+    </Frame>
+
+</Ui>
