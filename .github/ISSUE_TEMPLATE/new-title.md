@@ -1,14 +1,5 @@
 ---
 name: New Title
-about: New Title
-title: "[NEW][TITLE] "
-labels: New Title
-assignees: ''
-
----
-
----
-name: New Title
 about: Report a title missing from the database
 title: "[New Title] "
 labels: new-title

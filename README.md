@@ -78,6 +78,19 @@ libs/
 2. `/epithet` - opens the title browser.
 3. `/epithet scan` - forces a title rescan.
 
+## Contributing
+
+Found a missing title, incorrect data, or an obtainability change? Open an issue using one of the templates below:
+
+| Template | When to use |
+|----------|-------------|
+| **[New Title](../../issues/new?labels=new-title&template=new-title.md)** | A title exists in-game but is missing from the database |
+| **[Title Correction](../../issues/new?labels=correction&template=title-correction.md)** | Any field on an existing title is wrong (rarity, source, type, etc.) |
+| **[Obtainability Change](../../issues/new?labels=obtainability-change&template=obtainability-change.md)** | A title was removed, re-added, or made seasonal in a patch |
+| **[Bulk Update](../../issues/new?labels=bulk-update&template=bulk-update.md)** | Multiple titles added/changed in a single patch or event |
+
+Please include Wowhead links, patch notes, or in-game screenshots as evidence where possible.
+
 ## Licence
 
 Apache-2.0 license - see [LICENSE](LICENSE).

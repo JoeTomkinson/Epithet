@@ -1,14 +1,5 @@
 ---
 name: Obtainability Change
-about: Obtainability Change
-title: ''
-labels: ''
-assignees: ''
-
----
-
----
-name: Obtainability Change
 about: A title's obtainability status changed (removed, re-added, or made seasonal)
 title: "[Status Change] "
 labels: obtainability-change

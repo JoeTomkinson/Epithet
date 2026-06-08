@@ -1,14 +1,5 @@
 ---
 name: Title Correction
-about: Title Correction
-title: ''
-labels: ''
-assignees: ''
-
----
-
----
-name: Title Correction
 about: Correct inaccurate data for an existing title
 title: "[Correction] "
 labels: correction
