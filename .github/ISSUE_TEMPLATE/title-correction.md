@@ -1,0 +1,34 @@
+---
+name: Title Correction
+about: Title Correction
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+---
+name: Title Correction
+about: Correct inaccurate data for an existing title
+title: "[Correction] "
+labels: correction
+---
+
+## Title
+
+**Title text** (lowercase key in titles-db.json):
+
+
+## What's wrong?
+
+**Field(s) to correct:** (obtainable, obtainability_reason, exp, q, type, source, faction, other)
+
+**Current value:**
+
+
+**Correct value:**
+
+
+## Justification
+
+<!-- Why is the current data wrong? Link patch notes, Wowhead, blue posts, or in-game evidence -->
