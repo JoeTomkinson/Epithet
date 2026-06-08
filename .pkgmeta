@@ -24,7 +24,10 @@ externals:
     tag: latest
 
 ignore:
+  - scripts
+  - dist
   - tools
+  - icons/unused
   - .gitignore
   - .pkgmeta
   - "*.md"

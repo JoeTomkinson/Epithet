@@ -485,13 +485,32 @@ function Detail:RefreshSourceCard(record)
     end
     self.kindLabel:SetText(kind)
 
-    self.sourceLink.text:SetText(record.link or record.src or "")
-    if record.sourceID then
+    -- Source link text: prefer structured source fields
+    local sourceName = record.link or ""
+    if record.achievement and record.achievement ~= "" then
+        sourceName = record.achievement
+    elseif record.quest and record.quest ~= "" then
+        sourceName = record.quest
+    elseif record.source_item and record.source_item ~= "" then
+        sourceName = record.source_item
+    end
+    self.sourceLink.text:SetText(sourceName)
+    if record.achievement_id then
         self.sourceLink:Show()
     else
         self.sourceLink:Hide()
     end
-    self.descText:SetText((record.src and record.src ~= "") and record.src or L["UNKNOWN_SOURCE"])
+
+    -- Contextual description based on source kind
+    local desc
+    if record.achievement and record.achievement ~= "" then
+        desc = format(L["SOURCE_ACHIEVEMENT_DESC"], record.achievement)
+    elseif record.quest and record.quest ~= "" then
+        desc = format(L["SOURCE_QUEST_DESC"], record.quest)
+    elseif record.source_item and record.source_item ~= "" then
+        desc = format(L["SOURCE_ITEM_DESC"], record.source_item)
+    end
+    self.descText:SetText(desc or L["UNKNOWN_SOURCE"])
 
     -- Obtainability banner
     local obt = record.obtainable
@@ -541,6 +560,13 @@ function Detail:RefreshSourceCard(record)
     elseif record.obtainable == "feat" then
         lines[#lines + 1] = ""
         lines[#lines + 1] = FAINT .. "Availability|r     " .. WARN .. L["FEAT_OF_STRENGTH"] .. "|r"
+    elseif record.availability and record.availability ~= "permanent" then
+        local avail = L["AVAILABILITY_" .. record.availability:upper()] or record.availability
+        if record.availability_event then
+            avail = avail .. " " .. DOT .. " " .. record.availability_event
+        end
+        lines[#lines + 1] = ""
+        lines[#lines + 1] = FAINT .. "Availability|r     " .. WARN .. avail .. "|r"
     else
         lines[#lines + 1] = ""
         lines[#lines + 1] = FAINT .. "Availability|r     " .. TEXT .. "Account-wide|r"
@@ -557,6 +583,10 @@ function Detail:RefreshSourceCard(record)
         local lockHex = T and ("|cff" .. T.col.locked.hex) or "|cff5d5443"
         lines[#lines + 1] = ""
         lines[#lines + 1] = FAINT .. "Status|r              " .. lockHex .. L["NOT_YET_EARNED"] .. "|r"
+    end
+    if record.last_updated then
+        lines[#lines + 1] = ""
+        lines[#lines + 1] = FAINT .. "Last assessed|r   " .. TEXT .. record.last_updated .. "|r"
     end
 
     self.metaText:SetText(table.concat(lines, "\n"))
@@ -623,13 +653,13 @@ end
 function Detail:OnSourceLinkClick()
     local record = ns.MainFrame:GetDetailRecord()
     if not record then return end
-    if not record.sourceID then return end
-    if C_AchievementInfo and C_AchievementInfo.IsValidAchievement and not C_AchievementInfo.IsValidAchievement(record.sourceID) then return end
+    if not record.achievement_id then return end
+    if C_AchievementInfo and C_AchievementInfo.IsValidAchievement and not C_AchievementInfo.IsValidAchievement(record.achievement_id) then return end
     if not AchievementFrame then
         if UIParentLoadAddOn then UIParentLoadAddOn("Blizzard_AchievementUI") end
     end
     if OpenAchievementFrameToAchievement then
-        OpenAchievementFrameToAchievement(record.sourceID)
+        OpenAchievementFrameToAchievement(record.achievement_id)
     end
 end
 

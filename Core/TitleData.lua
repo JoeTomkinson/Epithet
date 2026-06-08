@@ -154,20 +154,26 @@ function TitleData:Scan()
                     q         = static and static.q or nil,
                     exp       = static and static.exp or nil,
                     cat       = static and static.cat or nil,
-                    src       = static and static.src or nil,
                     kind      = static and static.kind or nil,
                     link      = static and static.link or nil,
-                    sourceID  = static and static.sourceID or nil,
+                    achievement    = static and static.achievement or nil,
+                    achievement_id = static and static.achievement_id or nil,
+                    quest          = static and static.quest or nil,
+                    quest_id       = static and static.quest_id or nil,
+                    source_item    = static and static.source_item or nil,
                     rarity    = static and static.rarity or nil,
                     obtainable = static and static.obtainable or nil,
                     obtainability_reason = static and static.obtainability_reason or nil,
                     faction   = static and static.faction or nil,
+                    availability       = static and static.availability or nil,
+                    availability_event = static and static.availability_event or nil,
+                    last_updated       = static and static.last_updated or nil,
                     date      = nil, -- populated below
                 }
 
                 -- Try to get earned date from achievement
-                if earned and record.sourceID then
-                    record.date = GetEarnedDate(record.sourceID)
+                if earned and record.achievement_id then
+                    record.date = GetEarnedDate(record.achievement_id)
                 end
 
                 if earned then
@@ -242,14 +248,14 @@ end
 -- Open the linked achievement (mirrors design/Core/TitleData.lua ns.OpenSource)
 -- ---------------------------------------------------------------------------
 function TitleData:OpenSource(record)
-    if not (record and record.sourceID) then return end
+    if not (record and record.achievement_id) then return end
     if not AchievementFrame then
         if UIParentLoadAddOn then UIParentLoadAddOn("Blizzard_AchievementUI") end
     end
     if OpenAchievementFrameToAchievement then
-        OpenAchievementFrameToAchievement(record.sourceID)
+        OpenAchievementFrameToAchievement(record.achievement_id)
     elseif AchievementFrame_SelectAchievement then
         ShowUIPanel(AchievementFrame)
-        AchievementFrame_SelectAchievement(record.sourceID)
+        AchievementFrame_SelectAchievement(record.achievement_id)
     end
 end

@@ -123,3 +123,19 @@ L["HIDE_UNOBTAINABLE"] = "Hide unobtainable"
 L["HIDE_TIME_SENSITIVE"] = "Hide time-sensitive"
 L["UNKNOWN_SOURCE"] = "Unknown source"
 L["FEAT_OF_STRENGTH"] = "Feat of Strength (may be unobtainable)"
+
+-- Source descriptions
+L["SOURCE_ACHIEVEMENT_DESC"] = "Awarded by the achievement %s"
+L["SOURCE_QUEST_DESC"] = "Awarded during the quest %s"
+L["SOURCE_ITEM_DESC"] = "Granted by %s"
+
+-- Meta grid
+L["LAST_ASSESSED"] = "Last assessed"
+
+-- Availability labels
+L["AVAILABILITY_SEASONAL"] = "Seasonal"
+L["AVAILABILITY_LIMITED"] = "Limited"
+L["AVAILABILITY_PROMOTIONAL"] = "Promotional"
+L["AVAILABILITY_TEMPORARY"] = "Temporary"
+L["AVAILABILITY_REMOVED"] = "Removed"
+L["AVAILABILITY_PERMANENT"] = "Permanent"

@@ -3,6 +3,7 @@
 
 # Title database (curated/proprietary — not distributed via source control)
 data/TitlesDB.lua
+data/schema.json
 
 # Build output
 dist/

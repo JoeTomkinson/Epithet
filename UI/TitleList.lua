@@ -249,7 +249,7 @@ function TitleList:InitTitleRow(row, record)
 
     -- Row 2: "Kind: Source" (e.g. "Achievement: Glory of the Raider")
     local kindStr = record.kind or record.cat or ""
-    local srcStr  = record.src or ""
+    local srcStr  = record.achievement or record.quest or record.source_item or ""
     if kindStr ~= "" and srcStr ~= "" then
         row.SourceText:SetText(kindStr .. ": " .. srcStr)
     elseif srcStr ~= "" then

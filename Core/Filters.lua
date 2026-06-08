@@ -127,11 +127,13 @@ function Filters:Matches(record, filters)
         end
     end
 
-    -- Search (case-insensitive substring over text + src + link + cat)
+    -- Search (case-insensitive substring over text + sources + link + cat)
     if filters.search and filters.search ~= "" then
         local needle = strlower(filters.search)
         local haystack = (record.text or "") .. " " ..
-                         (record.src or "") .. " " ..
+                         (record.achievement or "") .. " " ..
+                         (record.quest or "") .. " " ..
+                         (record.source_item or "") .. " " ..
                          (record.link or "") .. " " ..
                          (record.cat or "")
         if not strfind(strlower(haystack), needle, 1, true) then
