@@ -22,9 +22,6 @@ Epithet/
 │   ├── Core.lua             # Enumeration, scanning, data join logic
 │   └── UI.lua               # AceGUI-based browser frame
 ├── libs/                    # Embedded Ace3 libraries (see below)
-├── tools/
-│   ├── generate-titles.js   # Node.js data generator script
-│   └── package.json         # Generator dependencies
 ├── LICENSE
 └── README.md
 ```
@@ -64,7 +61,7 @@ Override any title by adding its ID to `RARITY_OVERRIDES` in `tools/generate-tit
 
 Download from [CurseForge](https://www.curseforge.com/wow/addons/ace3) or use [BigWigsMods/packager](https://github.com/BigWigsMods/packager). Place in `libs/`:
 
-```
+```txt
 libs/
 ├── LibStub/
 ├── CallbackHandler-1.0/
@@ -74,16 +71,6 @@ libs/
 ├── AceGUI-3.0/
 └── AceEvent-3.0/
 ```
-
-## Building the Title Database
-
-```bash
-cd tools
-npm install
-npm run generate
-```
-
-This outputs `data/Titles.lua`. Currently uses a hardcoded sample of ~20 titles; the `--fetch` flag is stubbed for future Wowhead scraping.
 
 ## Usage In-Game
 
