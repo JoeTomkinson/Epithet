@@ -1,7 +1,7 @@
 ## Interface: 120001
 ## Title: Epithet
 ## Notes: Browse all player titles, see how each was obtained, rarity tiers, and track your collection.
-## Author: JoeTomkinson
+## Author: Joe Tomkinson (Grimmvöcare - Bronzebeard)
 ## Version: 1.0.0
 ## SavedVariables: EpithetDB
 ## IconTexture: Interface\AddOns\Epithet\icons\logo\epithet-wax-seal-red-mark-64
