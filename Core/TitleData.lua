@@ -23,6 +23,7 @@ local strlower       = strlower
 
 local TitleData = {}
 ns.TitleData = TitleData
+TitleData.dirty = true  -- ensure first Scan() always runs
 
 -- ---------------------------------------------------------------------------
 -- Rarity / quality colours (pip hex = true item colour; text = on-dark variant)
@@ -117,9 +118,13 @@ end
 
 -- ---------------------------------------------------------------------------
 -- Full scan: enumerate all titles, merge with bundled DB
+-- Gated by a dirty flag to avoid redundant work on repeated Show() calls.
 -- ---------------------------------------------------------------------------
-function TitleData:Scan()
+function TitleData:Scan(force)
+    if not force and not self.dirty and self.records then return self.records end
+
     local records = {}
+    local recordsByID = {}
     local earnedCount = 0
     local totalCount = 0
     local earnedObtainableCount = 0
@@ -171,6 +176,16 @@ function TitleData:Scan()
                     date      = nil, -- populated below
                 }
 
+                -- Pre-compute lower-case search key for fast filtering
+                record._searchKey = strlower(
+                    (text or "") .. " " ..
+                    (record.achievement or "") .. " " ..
+                    (record.quest or "") .. " " ..
+                    (record.source_item or "") .. " " ..
+                    (record.link or "") .. " " ..
+                    (record.cat or "")
+                )
+
                 -- Try to get earned date from achievement
                 if earned and record.achievement_id then
                     record.date = GetEarnedDate(record.achievement_id)
@@ -190,11 +205,13 @@ function TitleData:Scan()
                 end
 
                 records[#records + 1] = record
+                recordsByID[titleID] = record
             end
         end
     end
 
     self.records = records
+    self.recordsByID = recordsByID
     self.earnedCount = earnedCount
     self.totalCount = totalCount
     self.earnedObtainableCount = earnedObtainableCount
@@ -202,6 +219,7 @@ function TitleData:Scan()
     self.currentTitleID = currentTitleID
     self.playerName = playerName
     self.playerRealm = GetNormalizedRealmName and GetNormalizedRealmName() or "Unknown"
+    self.dirty = false
 
     return records
 end
@@ -220,16 +238,11 @@ function TitleData:RefreshActiveState()
 end
 
 -- ---------------------------------------------------------------------------
--- Get record by titleID
+-- Get record by titleID (O(1) via index built during Scan)
 -- ---------------------------------------------------------------------------
 function TitleData:GetRecord(titleID)
-    if not self.records then return nil end
-    for _, record in ipairs(self.records) do
-        if record.titleID == titleID then
-            return record
-        end
-    end
-    return nil
+    if not self.recordsByID then return nil end
+    return self.recordsByID[titleID]
 end
 
 -- ---------------------------------------------------------------------------

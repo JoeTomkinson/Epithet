@@ -6,10 +6,12 @@ local _, ns = ...
 local L = ns.L
 local T = ns.Theme
 
--- Localize Lua stdlib
+-- Localize WoW APIs & Lua stdlib
 local pairs, ipairs = pairs, ipairs
 local tconcat  = table.concat
 local strlower = strlower
+local format   = string.format
+local UnitName = UnitName
 
 local TitleList = {}
 ns.TitleList = TitleList
@@ -22,8 +24,8 @@ local UNOBTAIN_SEALED    = "Interface\\AddOns\\Epithet\\icons\\ui\\epithet-ui-un
 local UNOBTAIN_HOURGLASS = "Interface\\AddOns\\Epithet\\icons\\ui\\epithet-ui-unobtainable-hourglass-16"
 
 -- Faction overlay icons (32px, downscaled to 20px for clean rendering on rarity gem)
-local FACTION_ALLIANCE = "Interface\\AddOns\\Epithet\\icons\\ui\\epithet-faction-alliance-32"
-local FACTION_HORDE    = "Interface\\AddOns\\Epithet\\icons\\ui\\epithet-faction-horde-32"
+local FACTION_ALLIANCE = "Interface\\AddOns\\Epithet\\icons\\ui\\alliance-logo-white"
+local FACTION_HORDE    = "Interface\\AddOns\\Epithet\\icons\\ui\\horde-logo-white"
 
 local RARITY_GEMS = {
     "Interface\\AddOns\\Epithet\\icons\\rarity\\epithet-rarity-1-common-64",
@@ -217,11 +219,11 @@ function TitleList:InitTitleRow(row, record)
     local faction = record.faction
     if faction == "Alliance" then
         row.FactionBadge:SetTexture(FACTION_ALLIANCE)
-        row.FactionBadge:SetVertexColor(0.30, 0.55, 1.0, 1.0)
+        row.FactionBadge:SetVertexColor(0.91, 0.78, 0.45, 1.0)
         row.FactionBadge:Show()
     elseif faction == "Horde" then
         row.FactionBadge:SetTexture(FACTION_HORDE)
-        row.FactionBadge:SetVertexColor(0.90, 0.20, 0.20, 1.0)
+        row.FactionBadge:SetVertexColor(0.85, 0.20, 0.20, 1.0)
         row.FactionBadge:Show()
     else
         row.FactionBadge:Hide()

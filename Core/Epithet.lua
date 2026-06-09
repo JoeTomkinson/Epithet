@@ -84,6 +84,7 @@ end
 -- Event handlers
 -- ---------------------------------------------------------------------------
 function Epithet:PLAYER_ENTERING_WORLD()
+    ns.TitleData.dirty = true
     ns.TitleData:Scan()
     if ns.MainFrame and ns.MainFrame:IsShown() then
         ns.MainFrame:FullRefresh()
@@ -92,6 +93,7 @@ end
 
 function Epithet:ACHIEVEMENT_EARNED()
     -- A new title may have unlocked
+    ns.TitleData.dirty = true
     ns.TitleData:Scan()
     if ns.MainFrame and ns.MainFrame:IsShown() then
         ns.MainFrame:FullRefresh()
@@ -127,6 +129,7 @@ function Epithet:HandleSlash(input)
         end
         return
     elseif cmd == "scan" then
+        ns.TitleData.dirty = true
         ns.TitleData:Scan()
         Print("Title scan complete: " .. (ns.TitleData.earnedCount or 0) .. " / " .. (ns.TitleData.totalCount or 0))
         return

@@ -42,8 +42,8 @@ local UNOBTAIN_SEALED_16    = "Interface\\AddOns\\Epithet\\icons\\ui\\epithet-ui
 local UNOBTAIN_HOURGLASS_16 = "Interface\\AddOns\\Epithet\\icons\\ui\\epithet-ui-unobtainable-hourglass-16"
 
 -- Faction icons (64px for detail panel — sharper at display size)
-local FACTION_ALLIANCE_64 = "Interface\\AddOns\\Epithet\\icons\\ui\\epithet-faction-alliance-64"
-local FACTION_HORDE_64    = "Interface\\AddOns\\Epithet\\icons\\ui\\epithet-faction-horde-64"
+local FACTION_ALLIANCE_64 = "Interface\\AddOns\\Epithet\\icons\\ui\\alliance-logo-white"
+local FACTION_HORDE_64    = "Interface\\AddOns\\Epithet\\icons\\ui\\horde-logo-white"
 
 -- Single-letter / glyph sigil per source kind (fallback if texture missing)
 local SIGIL_LETTERS = {
@@ -128,7 +128,7 @@ function Detail:InitRarityCard()
     local card = CreateFrame("Frame", nil, panel, "InsetFrameTemplate3")
     card:SetPoint("TOPLEFT", self.subLine, "BOTTOMLEFT", 0, -12)
     card:SetPoint("RIGHT", panel, "RIGHT", -INSET, 0)
-    card:SetHeight(170)
+    card:SetHeight(76)
     self.rarityCard = card
 
     -- Gem (16x16 rarity gem icon before quality name)
@@ -164,12 +164,77 @@ function Detail:InitRarityCard()
     pct:SetJustifyH("LEFT")
     self.rarityPct = pct
 
-    local note = card:CreateFontString(nil, "ARTWORK", "GameFontDisableSmall")
-    note:SetPoint("TOPLEFT", pct, "BOTTOMLEFT", 0, -8)
-    note:SetPoint("RIGHT", card, "RIGHT", -12, 0)
-    note:SetJustifyH("LEFT")
-    note:SetTextColor(MUTED.r, MUTED.g, MUTED.b)
-    self.rarityNote = note
+    -- Rarity info button (circular ? in top-right)
+    self:InitRarityInfoButton(card)
+end
+
+-- ---------------------------------------------------------------------------
+-- Rarity info popup (? button + modal)
+-- ---------------------------------------------------------------------------
+function Detail:InitRarityInfoButton(card)
+    local btn = CreateFrame("Button", nil, card)
+    btn:SetSize(20, 20)
+    btn:SetPoint("TOPRIGHT", card, "TOPRIGHT", -8, -8)
+
+    -- Circular background
+    local bg = btn:CreateTexture(nil, "BACKGROUND")
+    bg:SetAllPoints()
+    bg:SetColorTexture(0.18, 0.15, 0.10, 0.9)
+    btn.bg = bg
+
+    -- Round mask (via SetMask on the bg)
+    bg:SetTexture("Interface\\COMMON\\common-roundhighlight")
+    bg:SetVertexColor(0.18, 0.15, 0.10, 0.9)
+
+    -- Question-mark label
+    local qm = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    qm:SetPoint("CENTER", 0, 0)
+    qm:SetText("?")
+    qm:SetTextColor(GOLD.r, GOLD.g, GOLD.b)
+    btn.label = qm
+
+    btn:SetScript("OnEnter", function(self_)
+        self_.bg:SetVertexColor(0.28, 0.23, 0.14, 1.0)
+        self_.label:SetTextColor(1, 0.92, 0.6)
+    end)
+    btn:SetScript("OnLeave", function(self_)
+        self_.bg:SetVertexColor(0.18, 0.15, 0.10, 0.9)
+        self_.label:SetTextColor(GOLD.r, GOLD.g, GOLD.b)
+    end)
+    btn:SetScript("OnClick", function() self:ToggleRarityModal() end)
+    self.rarityInfoBtn = btn
+
+    -- Modal frame (hidden by default)
+    local modal = CreateFrame("Frame", nil, card, "BackdropTemplate")
+    modal:SetSize(320, 160)
+    modal:SetPoint("TOPRIGHT", btn, "BOTTOMRIGHT", 0, -4)
+    modal:SetBackdrop({
+        bgFile   = "Interface\\Buttons\\WHITE8x8",
+        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        edgeSize = 1,
+    })
+    modal:SetBackdropColor(0.08, 0.06, 0.03, 0.95)
+    modal:SetBackdropBorderColor(0.49, 0.37, 0.15, 1.0)
+    modal:SetFrameStrata("DIALOG")
+    modal:Hide()
+    self.rarityModal = modal
+
+    local noteText = modal:CreateFontString(nil, "ARTWORK", "GameFontDisableSmall")
+    noteText:SetPoint("TOPLEFT", 10, -10)
+    noteText:SetPoint("BOTTOMRIGHT", -10, 10)
+    noteText:SetJustifyH("LEFT")
+    noteText:SetJustifyV("TOP")
+    noteText:SetTextColor(MUTED.r, MUTED.g, MUTED.b)
+    noteText:SetSpacing(2)
+    self.rarityModalText = noteText
+end
+
+function Detail:ToggleRarityModal()
+    if self.rarityModal:IsShown() then
+        self.rarityModal:Hide()
+    else
+        self.rarityModal:Show()
+    end
 end
 
 -- ---------------------------------------------------------------------------
@@ -432,6 +497,11 @@ end
 function Detail:Refresh()
     if not self.panel then return end
 
+    -- Dismiss rarity info popup on any selection/hover change
+    if self.rarityModal and self.rarityModal:IsShown() then
+        self.rarityModal:Hide()
+    end
+
     local record = ns.MainFrame:GetDetailRecord()
     if not record then
         self:ShowEmpty()
@@ -515,17 +585,17 @@ function Detail:RefreshRarityCard(record)
         self.rarityPct:SetText("")
     end
 
-    self.rarityNote:SetText((ns.EpithetData and ns.EpithetData.rarityNote) or L["RARITY_NOTE"])
+    self.rarityModalText:SetText((ns.EpithetData and ns.EpithetData.rarityNote) or L["RARITY_NOTE"])
 
     -- Faction icon
     local faction = record.faction
     if faction == "Alliance" then
         self.factionIcon:SetTexture(FACTION_ALLIANCE_64)
-        self.factionIcon:SetVertexColor(0.30, 0.55, 1.0, 1.0)
+        self.factionIcon:SetVertexColor(0.91, 0.78, 0.45, 1.0)
         self.factionIcon:Show()
     elseif faction == "Horde" then
         self.factionIcon:SetTexture(FACTION_HORDE_64)
-        self.factionIcon:SetVertexColor(0.90, 0.20, 0.20, 1.0)
+        self.factionIcon:SetVertexColor(0.85, 0.20, 0.20, 1.0)
         self.factionIcon:Show()
     else
         self.factionIcon:Hide()

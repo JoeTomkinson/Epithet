@@ -136,16 +136,21 @@ function Filters:Matches(record, filters)
         end
     end
 
-    -- Search (case-insensitive substring over text + sources + link + cat)
+    -- Search (case-insensitive substring using pre-computed key from Scan)
     if filters.search and filters.search ~= "" then
         local needle = strlower(filters.search)
-        local haystack = (record.text or "") .. " " ..
-                         (record.achievement or "") .. " " ..
-                         (record.quest or "") .. " " ..
-                         (record.source_item or "") .. " " ..
-                         (record.link or "") .. " " ..
-                         (record.cat or "")
-        if not strfind(strlower(haystack), needle, 1, true) then
+        local haystack = record._searchKey
+        if not haystack then
+            haystack = strlower(
+                (record.text or "") .. " " ..
+                (record.achievement or "") .. " " ..
+                (record.quest or "") .. " " ..
+                (record.source_item or "") .. " " ..
+                (record.link or "") .. " " ..
+                (record.cat or "")
+            )
+        end
+        if not strfind(haystack, needle, 1, true) then
             return false
         end
     end
@@ -153,17 +158,22 @@ function Filters:Matches(record, filters)
     return true
 end
 
+-- Scratch table reused by Apply() to avoid per-call allocation
+local filteredScratch = {}
+
 -- ---------------------------------------------------------------------------
 -- Apply filters to a list of records, return filtered array
+-- NOTE: The returned table is reused across calls. Callers must consume it
+-- before the next Apply() invocation (BuildDisplayList does this).
 -- ---------------------------------------------------------------------------
 function Filters:Apply(records, filters)
-    local result = {}
+    wipe(filteredScratch)
     for _, record in ipairs(records) do
         if self:Matches(record, filters) then
-            result[#result + 1] = record
+            filteredScratch[#filteredScratch + 1] = record
         end
     end
-    return result
+    return filteredScratch
 end
 
 -- ---------------------------------------------------------------------------
