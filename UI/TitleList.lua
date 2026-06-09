@@ -8,7 +8,8 @@ local T = ns.Theme
 
 -- Localize Lua stdlib
 local pairs, ipairs = pairs, ipairs
-local tconcat = table.concat
+local tconcat  = table.concat
+local strlower = strlower
 
 local TitleList = {}
 ns.TitleList = TitleList
@@ -31,6 +32,9 @@ local RARITY_GEMS = {
     "Interface\\AddOns\\Epithet\\icons\\rarity\\epithet-rarity-4-epic-64",
     "Interface\\AddOns\\Epithet\\icons\\rarity\\epithet-rarity-5-legendary-64",
 }
+
+-- Inline star texture escape (prepended to title text for favourites)
+local FAV_STAR = "|TInterface\\AddOns\\Epithet\\icons\\ui\\star:12:12|t "
 
 local ROW_HEIGHT    = 64
 local HEADER_HEIGHT = 28
@@ -224,6 +228,10 @@ function TitleList:InitTitleRow(row, record)
     end
 
     -- Row 1: Title with player name in context
+    local favs = ns.Epithet.db and ns.Epithet.db.profile.favourites
+    local isFav = favs and favs[strlower(record.text or "")] or false
+    local starPrefix = isFav and FAV_STAR or ""
+
     if T and tq then
         local col = T.col
         local titleHex = record.earned and tq.text.hex or col.locked.hex
@@ -231,14 +239,14 @@ function TitleList:InitTitleRow(row, record)
         local title    = T.Wrap(titleHex, record.text)
         local name     = T.Wrap(nameHex, playerName)
         if record.type == "suffix" then
-            row.TitleText:SetText(name .. ", " .. title)
+            row.TitleText:SetText(starPrefix .. name .. ", " .. title)
         else
-            row.TitleText:SetText(title .. " " .. name)
+            row.TitleText:SetText(starPrefix .. title .. " " .. name)
         end
         row.TitleText:SetTextColor(1, 1, 1)
     else
         local contextText = ns.TitleData:RenderTitleInContext(record, playerName)
-        row.TitleText:SetText(contextText)
+        row.TitleText:SetText(starPrefix .. contextText)
         if record.earned then
             local c = quality and quality.text or { r = 0.95, g = 0.93, b = 0.89 }
             row.TitleText:SetTextColor(c.r, c.g, c.b)

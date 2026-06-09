@@ -29,6 +29,7 @@ function Filters:GetDefaults()
         faction  = {},         -- empty = unrestricted; {["Alliance"]=true}
         hideUnobtainable   = false,
         hideTimeSensitive  = false,
+        favouritesOnly     = false,
     }
 end
 
@@ -46,6 +47,7 @@ function Filters:IsDefault(filters)
     if filters.faction and next(filters.faction) then return false end
     if filters.hideUnobtainable then return false end
     if filters.hideTimeSensitive then return false end
+    if filters.favouritesOnly then return false end
     return true
 end
 
@@ -63,12 +65,19 @@ function Filters:Reset(filters)
     if filters.faction then wipe(filters.faction) else filters.faction = {} end
     filters.hideUnobtainable = false
     filters.hideTimeSensitive = false
+    filters.favouritesOnly = false
 end
 
 -- ---------------------------------------------------------------------------
 -- Test a single record against filters (AND across facets, OR within)
 -- ---------------------------------------------------------------------------
 function Filters:Matches(record, filters)
+    -- Favourites only
+    if filters.favouritesOnly then
+        local favs = ns.Epithet.db and ns.Epithet.db.profile.favourites
+        if not favs or not favs[strlower(record.text or "")] then return false end
+    end
+
     -- Status
     if filters.status == "earned" and not record.earned then return false end
     if filters.status == "unearned" and record.earned then return false end
@@ -168,6 +177,15 @@ local function SortCollectedFirst(a, b)
     -- Earned before locked
     if a.earned ~= b.earned then
         return a.earned
+    end
+    -- Within earned: favourites first
+    if a.earned and b.earned then
+        local favs = ns.Epithet.db and ns.Epithet.db.profile.favourites
+        if favs then
+            local fa = favs[strlower(a.text or "")] or false
+            local fb = favs[strlower(b.text or "")] or false
+            if fa ~= fb then return fa end
+        end
     end
     -- Within group: expansion order
     local ea, eb = ExpOrder(a.exp), ExpOrder(b.exp)

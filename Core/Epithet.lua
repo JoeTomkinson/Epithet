@@ -23,7 +23,9 @@ local DB_DEFAULTS = {
             faction  = {},
             hideUnobtainable   = false,
             hideTimeSensitive  = false,
+            favouritesOnly     = false,
         },
+        favourites = {},          -- set keyed by lowercase title text: { ["the explorer"] = true }
         sort = "collectedFirst",  -- "collectedFirst" | "expansion" | "alphabetical" | "quality" | "category"
         obtainableOnly = false,   -- toggle: show earned % against obtainable pool only
         framePoint = nil,         -- {point, relPoint, x, y}

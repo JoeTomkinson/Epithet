@@ -93,8 +93,29 @@ function Sidebar:Init(sidebar)
         self.statusButtons[def.value] = btn
     end
 
+    -- ----- Favourites toggle -------------------------------------------------
+    local favRow = CreateFrame("Frame", nil, sidebar)
+    favRow:SetPoint("TOPLEFT", statusRow, "BOTTOMLEFT", 0, -10)
+    favRow:SetPoint("TOPRIGHT", sidebar, "TOPRIGHT", -PAD_X, 0)
+    favRow:SetHeight(20)
+
+    local favCheck = CreateFrame("CheckButton", nil, favRow, "UICheckButtonTemplate")
+    favCheck:SetSize(22, 22)
+    favCheck:SetPoint("LEFT", 0, 0)
+    favCheck:SetChecked(db.filters.favouritesOnly or false)
+    favCheck:SetScript("OnClick", function(box)
+        db.filters.favouritesOnly = box:GetChecked()
+        ns.MainFrame:RefreshList()
+    end)
+
+    local favLabel = favRow:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+    favLabel:SetPoint("LEFT", favCheck, "RIGHT", 4, 0)
+    favLabel:SetText(L["FAVOURITES_ONLY"] or "Favourites only")
+    favLabel:SetTextColor(GOLD_DIM.r, GOLD_DIM.g, GOLD_DIM.b)
+    self.favCheck = favCheck
+
     -- ----- Rarity facet ----------------------------------------------------
-    local rarityHeading = CreateHeading(sidebar, L["RARITY_TIER"], statusRow, 14)
+    local rarityHeading = CreateHeading(sidebar, L["RARITY_TIER"], favRow, 14)
     local rarityDefs = {
         { key = 5, label = L["LEGENDARY"] },
         { key = 4, label = L["EPIC"] },
@@ -424,5 +445,9 @@ function Sidebar:Refresh()
     end
     if self.hideTimeSensBox then
         self.hideTimeSensBox:SetChecked(db.filters.hideTimeSensitive or false)
+    end
+    -- Sync favourites toggle
+    if self.favCheck then
+        self.favCheck:SetChecked(db.filters.favouritesOnly or false)
     end
 end

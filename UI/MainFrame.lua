@@ -59,6 +59,11 @@ function MainFrame:Init()
         frame.TitleBar.Title:SetText("|cffe8c767EPITHET|r |cffb0a284THE TITLE SHOWCASE|r")
     end
 
+    -- Wire info button click
+    if frame.TitleBar and frame.TitleBar.InfoButton then
+        frame.TitleBar.InfoButton:SetScript("OnClick", function() MainFrame:ShowAbout() end)
+    end
+
     -- Add to special frames for ESC-close
     tinsert(UISpecialFrames, "EpithetMainFrame")
 
@@ -546,4 +551,113 @@ end
 
 function MainFrame:GetDetailRecord()
     return self.hoveredRecord or self.selectedRecord
+end
+
+-- ---------------------------------------------------------------------------
+-- About / Info modal
+-- ---------------------------------------------------------------------------
+function MainFrame:ShowAbout()
+    if self.aboutFrame then
+        self.aboutFrame:Show()
+        return
+    end
+
+    local goldCol = T and T.col.gold or { r = 0.91, g = 0.78, b = 0.45 }
+    local parchCol = T and T.col.panel or { r = 0.07, g = 0.05, b = 0.03 }
+    local faintCol = T and T.col.faint or { r = 0.42, g = 0.38, b = 0.29 }
+
+    -- Overlay backdrop (dims the main frame)
+    local overlay = CreateFrame("Frame", nil, frame, "BackdropTemplate")
+    overlay:SetAllPoints(frame)
+    overlay:SetFrameStrata("DIALOG")
+    overlay:SetBackdrop({
+        bgFile = "Interface\\Buttons\\WHITE8X8",
+    })
+    overlay:SetBackdropColor(0, 0, 0, 0.6)
+    overlay:EnableMouse(true)
+    overlay:SetScript("OnMouseDown", function() MainFrame:HideAbout() end)
+
+    -- Modal card
+    local modal = CreateFrame("Frame", nil, overlay, "BackdropTemplate")
+    modal:SetSize(340, 280)
+    modal:SetPoint("CENTER", frame, "CENTER", 0, 0)
+    modal:SetBackdrop({
+        bgFile   = "Interface\\Buttons\\WHITE8X8",
+        edgeFile = "Interface\\Buttons\\WHITE8X8",
+        edgeSize = 2,
+        insets   = { left = 2, right = 2, top = 2, bottom = 2 },
+    })
+    modal:SetBackdropColor(parchCol.r, parchCol.g, parchCol.b, 0.97)
+    modal:SetBackdropBorderColor(goldCol.r, goldCol.g, goldCol.b, 0.85)
+    modal:EnableMouse(true)
+
+    -- Grimmforge logo
+    local logo = modal:CreateTexture(nil, "ARTWORK")
+    logo:SetSize(64, 64)
+    logo:SetPoint("TOP", modal, "TOP", 0, -24)
+    logo:SetTexture("Interface\\AddOns\\Epithet\\logo\\grimmforge-logo")
+
+    -- Title
+    local title = modal:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+    title:SetPoint("TOP", logo, "BOTTOM", 0, -12)
+    title:SetText("|cffe8c767Grimmforge|r")
+
+    -- Description
+    local desc = modal:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    desc:SetPoint("TOP", title, "BOTTOM", 0, -10)
+    desc:SetPoint("LEFT", modal, "LEFT", 24, 0)
+    desc:SetPoint("RIGHT", modal, "RIGHT", -24, 0)
+    desc:SetJustifyH("CENTER")
+    desc:SetSpacing(3)
+    desc:SetTextColor(0.78, 0.74, 0.66)
+    desc:SetText(
+        "Epithet is crafted by Grimmforge.\n\n" ..
+        "Open-source tools and addons for World of Warcraft.\n\n" ..
+        "|cffe8c767github.com/Grimmforge|r"
+    )
+
+    -- Close button
+    local closeBtn = CreateFrame("Button", nil, modal)
+    closeBtn:SetSize(80, 28)
+    closeBtn:SetPoint("BOTTOM", modal, "BOTTOM", 0, 18)
+
+    local closeBG = closeBtn:CreateTexture(nil, "BACKGROUND")
+    closeBG:SetAllPoints()
+    closeBG:SetColorTexture(0.11, 0.08, 0.04, 1.0)
+
+    local closeBorderT = closeBtn:CreateTexture(nil, "BORDER")
+    closeBorderT:SetHeight(1); closeBorderT:SetPoint("TOPLEFT"); closeBorderT:SetPoint("TOPRIGHT")
+    closeBorderT:SetColorTexture(goldCol.r, goldCol.g, goldCol.b, 0.5)
+    local closeBorderB = closeBtn:CreateTexture(nil, "BORDER")
+    closeBorderB:SetHeight(1); closeBorderB:SetPoint("BOTTOMLEFT"); closeBorderB:SetPoint("BOTTOMRIGHT")
+    closeBorderB:SetColorTexture(goldCol.r, goldCol.g, goldCol.b, 0.5)
+    local closeBorderL = closeBtn:CreateTexture(nil, "BORDER")
+    closeBorderL:SetWidth(1); closeBorderL:SetPoint("TOPLEFT"); closeBorderL:SetPoint("BOTTOMLEFT")
+    closeBorderL:SetColorTexture(goldCol.r, goldCol.g, goldCol.b, 0.5)
+    local closeBorderR = closeBtn:CreateTexture(nil, "BORDER")
+    closeBorderR:SetWidth(1); closeBorderR:SetPoint("TOPRIGHT"); closeBorderR:SetPoint("BOTTOMRIGHT")
+    closeBorderR:SetColorTexture(goldCol.r, goldCol.g, goldCol.b, 0.5)
+
+    local closeText = closeBtn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    closeText:SetPoint("CENTER")
+    closeText:SetText("Close")
+    closeText:SetTextColor(goldCol.r, goldCol.g, goldCol.b)
+
+    closeBtn:SetScript("OnClick", function() MainFrame:HideAbout() end)
+    closeBtn:SetScript("OnEnter", function()
+        closeBG:SetColorTexture(0.16, 0.12, 0.07, 1.0)
+        closeText:SetTextColor(1.0, 0.92, 0.6)
+    end)
+    closeBtn:SetScript("OnLeave", function()
+        closeBG:SetColorTexture(0.11, 0.08, 0.04, 1.0)
+        closeText:SetTextColor(goldCol.r, goldCol.g, goldCol.b)
+    end)
+
+    self.aboutFrame = overlay
+end
+
+function MainFrame:HideAbout()
+    if self.aboutFrame then
+        self.aboutFrame:Hide()
+    end
 end

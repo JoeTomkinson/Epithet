@@ -129,6 +129,35 @@
                     </Layer>
                 </Layers>
                 <Frames>
+                    <!-- Info / About button -->
+                    <Button name="$parentInfoButton" parentKey="InfoButton">
+                        <Size x="20" y="20"/>
+                        <Anchors>
+                            <Anchor point="RIGHT" x="-32" y="0"/>
+                        </Anchors>
+                        <Layers>
+                            <Layer level="ARTWORK">
+                                <FontString parentKey="Label" inherits="GameFontNormalSmall"
+                                            text="i" justifyH="CENTER">
+                                    <Anchors>
+                                        <Anchor point="CENTER" x="0" y="0"/>
+                                    </Anchors>
+                                    <Color r="1.0" g="1.0" b="1.0" a="0.6"/>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                        <Scripts>
+                            <OnClick>
+                                -- Wired from Lua in MainFrame:Init()
+                            </OnClick>
+                            <OnEnter>
+                                self.Label:SetTextColor(1.0, 1.0, 1.0, 1.0)
+                            </OnEnter>
+                            <OnLeave>
+                                self.Label:SetTextColor(1.0, 1.0, 1.0, 0.6)
+                            </OnLeave>
+                        </Scripts>
+                    </Button>
                     <!-- Close button (custom tinted icon) -->
                     <Button name="$parentCloseButton" parentKey="CloseButton">
                         <Size x="20" y="20"/>

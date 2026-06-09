@@ -7,10 +7,11 @@ local L = ns.L
 local T = ns.Theme
 
 -- Localize WoW APIs & Lua stdlib
-local UnitName = UnitName
-local format   = string.format
-local tconcat  = table.concat
-local wipe     = wipe
+local UnitName  = UnitName
+local format    = string.format
+local tconcat   = table.concat
+local wipe      = wipe
+local strlower  = strlower
 
 local Detail = {}
 ns.Detail = Detail
@@ -179,7 +180,7 @@ function Detail:InitSourceCard()
     local card = CreateFrame("Frame", nil, panel, "InsetFrameTemplate3")
     card:SetPoint("TOPLEFT", self.rarityCard, "BOTTOMLEFT", 0, -12)
     card:SetPoint("RIGHT", panel, "RIGHT", -INSET, 0)
-    card:SetPoint("BOTTOM", self.actionButton, "TOP", 0, 12)
+    card:SetPoint("BOTTOM", self.favButton, "TOP", 0, 12)
     self.sourceCard = card
 
     local heading = card:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
@@ -285,7 +286,7 @@ function Detail:InitActionFooter()
     note:SetTextColor(0.42, 0.38, 0.29)
     self.actionNote = note
 
-    -- Custom gold-bordered dark button
+    -- Custom gold-bordered dark button (Set as Title)
     local button = CreateFrame("Button", nil, panel)
     button:SetHeight(34)
     button:SetPoint("BOTTOMLEFT", note, "TOPLEFT", 0, 9)
@@ -362,6 +363,67 @@ function Detail:InitActionFooter()
     end
 
     self.actionButton = button
+
+    -- Favourite toggle button (positioned above the action button)
+    local favBtn = CreateFrame("Button", nil, panel)
+    favBtn:SetHeight(28)
+    favBtn:SetPoint("BOTTOMLEFT", button, "TOPLEFT", 0, 8)
+    favBtn:SetPoint("RIGHT", panel, "RIGHT", -INSET, 0)
+
+    local favBg = favBtn:CreateTexture(nil, "BACKGROUND")
+    favBg:SetAllPoints()
+    favBg:SetColorTexture(0.11, 0.08, 0.04, 1.0)
+    favBtn.bg = favBg
+
+    -- Border (4 edges)
+    local fbTop = favBtn:CreateTexture(nil, "BORDER")
+    fbTop:SetHeight(1); fbTop:SetPoint("TOPLEFT"); fbTop:SetPoint("TOPRIGHT")
+    fbTop:SetColorTexture(0.49, 0.37, 0.15, 1.0)
+    local fbBot = favBtn:CreateTexture(nil, "BORDER")
+    fbBot:SetHeight(1); fbBot:SetPoint("BOTTOMLEFT"); fbBot:SetPoint("BOTTOMRIGHT")
+    fbBot:SetColorTexture(0.49, 0.37, 0.15, 1.0)
+    local fbL = favBtn:CreateTexture(nil, "BORDER")
+    fbL:SetWidth(1); fbL:SetPoint("TOPLEFT"); fbL:SetPoint("BOTTOMLEFT")
+    fbL:SetColorTexture(0.49, 0.37, 0.15, 1.0)
+    local fbR = favBtn:CreateTexture(nil, "BORDER")
+    fbR:SetWidth(1); fbR:SetPoint("TOPRIGHT"); fbR:SetPoint("BOTTOMRIGHT")
+    fbR:SetColorTexture(0.49, 0.37, 0.15, 1.0)
+    favBtn.borders = { fbTop, fbBot, fbL, fbR }
+
+    -- Content container (centers icon + label as a group)
+    local content = CreateFrame("Frame", nil, favBtn)
+    content:SetPoint("CENTER")
+    content:SetHeight(14)
+    favBtn.content = content
+
+    -- Star icon
+    local favIcon = content:CreateTexture(nil, "OVERLAY")
+    favIcon:SetSize(14, 14)
+    favIcon:SetPoint("LEFT", 0, 0)
+    favIcon:SetTexture("Interface\\AddOns\\Epithet\\icons\\ui\\star")
+    favBtn.icon = favIcon
+
+    -- Label
+    local favText = content:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    favText:SetPoint("LEFT", favIcon, "RIGHT", 6, 0)
+    favBtn.text = favText
+
+    -- Hover
+    favBtn:SetScript("OnEnter", function(self_)
+        self_.bg:SetColorTexture(0.16, 0.12, 0.07, 1.0)
+        for _, b in ipairs(self_.borders) do
+            b:SetColorTexture(0.91, 0.78, 0.45, 1.0)
+        end
+    end)
+    favBtn:SetScript("OnLeave", function(self_)
+        self_.bg:SetColorTexture(0.11, 0.08, 0.04, 1.0)
+        for _, b in ipairs(self_.borders) do
+            b:SetColorTexture(0.49, 0.37, 0.15, 1.0)
+        end
+    end)
+    favBtn:SetScript("OnClick", function() self:OnFavouriteClick() end)
+
+    self.favButton = favBtn
 end
 
 -- ---------------------------------------------------------------------------
@@ -411,6 +473,7 @@ function Detail:Refresh()
     self:RefreshRarityCard(record)
     self:RefreshSourceCard(record)
     self:RefreshActionButton(record)
+    self:RefreshFavButton(record)
 end
 
 function Detail:RefreshRarityCard(record)
@@ -663,6 +726,49 @@ function Detail:OnSourceLinkClick()
     end
 end
 
+function Detail:OnFavouriteClick()
+    local record = ns.MainFrame:GetDetailRecord()
+    if not record or not record.earned then return end
+    local favs = ns.Epithet.db.profile.favourites
+    local key = strlower(record.text or "")
+    if favs[key] then
+        favs[key] = nil
+    else
+        favs[key] = true
+    end
+    self:RefreshFavButton(record)
+    ns.MainFrame:RefreshList()
+end
+
+function Detail:RefreshFavButton(record)
+    local btn = self.favButton
+    if not btn then return end
+
+    if not record or not record.earned then
+        btn:Hide()
+        return
+    end
+    btn:Show()
+
+    local favs = ns.Epithet.db and ns.Epithet.db.profile.favourites
+    local key = strlower(record.text or "")
+    local isFav = favs and favs[key] or false
+
+    if isFav then
+        btn.icon:SetVertexColor(0.91, 0.78, 0.45, 1.0)
+        btn.text:SetText(L["REMOVE_FAVOURITE"] or "Remove from Favourites")
+        btn.text:SetTextColor(GOLD.r, GOLD.g, GOLD.b)
+    else
+        btn.icon:SetVertexColor(0.40, 0.36, 0.28, 0.6)
+        btn.text:SetText(L["ADD_FAVOURITE"] or "Add to Favourites")
+        btn.text:SetTextColor(MUTED.r, MUTED.g, MUTED.b)
+    end
+
+    -- Resize content container so it stays centred
+    local textWidth = btn.text:GetStringWidth() or 80
+    btn.content:SetWidth(14 + 6 + textWidth)  -- icon + gap + text
+end
+
 -- ---------------------------------------------------------------------------
 -- Empty state
 -- ---------------------------------------------------------------------------
@@ -675,6 +781,7 @@ function Detail:ShowEmpty()
     self.sourceCard:Hide()
     self.actionButton:Hide()
     self.actionNote:Hide()
+    if self.favButton then self.favButton:Hide() end
 end
 
 function Detail:HideEmpty()
