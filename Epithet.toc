@@ -2,7 +2,7 @@
 ## Title: Epithet
 ## Notes: Browse all player titles, see how each was obtained, rarity tiers, and track your collection.
 ## Author: Joe Tomkinson (Grimmvöcare - Bronzebeard)
-## Version: 1.1.0
+## Version: 1.1.1
 ## SavedVariables: EpithetDB
 ## IconTexture: Interface\AddOns\Epithet\icons\logo\epithet-wax-seal-red-mark-64
 ## OptionalDeps: Ace3, LibDataBroker-1.1, LibDBIcon-1.0
