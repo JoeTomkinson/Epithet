@@ -22,4 +22,4 @@ labels: correction
 
 ## Justification
 
-<!-- Why is the current data wrong? Link patch notes, Wowhead, blue posts, or in-game evidence -->
+<!-- Why is the current data wrong? Link patch notes, blue posts, or in-game evidence -->

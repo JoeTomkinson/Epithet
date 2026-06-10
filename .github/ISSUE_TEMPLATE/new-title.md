@@ -27,7 +27,7 @@ labels: new-title
 
 **Source type:** (achievement, quest, reputation, pvp, event, profession, other)
 
-**Wowhead link or source ID:**
+**Source ID or reference:**
 
 
 **Faction requirement:** (alliance / horde / both / none)
@@ -35,4 +35,4 @@ labels: new-title
 
 ## Evidence
 
-<!-- Screenshots, Wowhead links, patch notes, or other verification -->
+<!-- Screenshots, patch notes, or other verification -->

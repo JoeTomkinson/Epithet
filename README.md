@@ -89,7 +89,7 @@ Found a missing title, incorrect data, or an obtainability change? Open an issue
 | **[Obtainability Change](../../issues/new?labels=obtainability-change&template=obtainability-change.md)** | A title was removed, re-added, or made seasonal in a patch |
 | **[Bulk Update](../../issues/new?labels=bulk-update&template=bulk-update.md)** | Multiple titles added/changed in a single patch or event |
 
-Please include Wowhead links, patch notes, or in-game screenshots as evidence where possible.
+Please include patch notes, in-game screenshots, or official sources as evidence where possible.
 
 ## Licence
 

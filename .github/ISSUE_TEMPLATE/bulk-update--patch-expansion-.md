@@ -39,4 +39,4 @@ labels: bulk-update
 
 ## References
 
-<!-- Patch notes, datamining links, Wowhead news posts -->
+<!-- Patch notes, datamining links -->
